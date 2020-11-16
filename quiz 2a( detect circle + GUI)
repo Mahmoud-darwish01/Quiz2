@@ -1,0 +1,89 @@
+# import the necessary packages
+from tkinter import *
+from PIL import Image
+from PIL import ImageTk
+from tkinter import filedialog
+import cv2
+
+# update the pannels
+#define a function
+def detected_circles():
+# load the image from disk, convert it to grayscale, and detect edges in it
+        img2 = cv2.imread('eye.JFIF')
+        gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+        edged = cv2.Canny(gray, 50, 100)
+
+        img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+#Finds circles in a grayscale image using the Hough transform.        
+        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT_ALT,
+                             0.5, 0.1, param1=300,
+                            param2=0.9, minRadius=5)
+# Draw the circles found on the Image
+        for circle in circles[:,0]:
+            center_x, center_y, radius = circle
+            cv2.circle(img2, (center_x, center_y), int(radius),(0, 0, 255), 2)
+# convert the images to PIL format
+        img2 = Image.fromarray(img2)
+        edged = Image.fromarray(edged)
+# convert the images to ImageTk format
+        img2 = ImageTk.PhotoImage(img2)
+        edged = ImageTk.PhotoImage(edged)
+#the second panel will store the Houghcircles image
+        panelB = Label(image=edged) 
+        panelB.image = edged
+        panelB.pack(side="right", padx=10, pady=10)# nitialize the window toolkit along with the image panel
+# while the third panel will store the edge image
+        panelC = Label(image=img2)
+        panelC.image = img2
+        panelC.pack(side="right", padx=10, pady=10)# initialize the window toolkit along with the image panel
+        
+        
+        
+# create a GUI, then for the images
+root = Tk()
+global panelA, panelB, panelC
+panelA = None
+panelB = None
+panelC = None
+# Title for the GUI
+label1 = Label(root,text = 'QUIZ 2')
+label1.pack()
+label1.config(justify = CENTER)
+# create a button, then when pressed, will trigger the Hough transform
+btn = Button(root, text="Click to find the CIRCLES", command=detected_circles)
+btn.pack(side="bottom", fill="both", expand="yes", padx="10", pady="10")
+
+# Read the Image from the filr
+image = cv2.imread('eye.JFIF')
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# convert the images to PIL format...
+image = Image.fromarray(image)
+
+# ...and then to ImageTk format
+image = ImageTk.PhotoImage(image)
+
+# if the panels are None, initialize them
+if panelA is None or panelB is None or panelC is None:
+# the first panel will store our original image
+	panelA = Label(image=image)
+	panelA.image = image
+	panelA.pack(side="left", padx=10, pady=10)# initialize the window toolkit along with the two image panels
+
+
+	# otherwise, update the image panels
+
+
+            # initialize the window toolkit along with the two image panels
+
+
+# create a button, then when pressed, will trigger a file chooser
+# dialog and allow the user to select an input image; then add the
+# button the GUI
+
+
+
+
+
+# kick off the GUI
+root.mainloop()
